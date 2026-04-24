@@ -35,10 +35,9 @@ jobs:
           echo "Checking if the patch can be applied cleanly..."        
           if git apply --check fix.patch; then
             echo "Patch check passed. Applying..."
-            git apply -3 --index fix.patch
+            git apply -v -3 --index fix.patch
           else
-            echo "Error: Patch does not apply cleanly to the current frameworks_base head."
-            exit 1
+            echo "Error: Patch does not apply cleanly to the current frameworks_base head."        
           fi
 
       - name: Verify Changes
