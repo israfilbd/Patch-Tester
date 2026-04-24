@@ -1,0 +1,48 @@
+name: Test Frameworks Patch
+
+on:
+  workflow_dispatch: # Allows you to run this manually from the Actions tab
+
+jobs:
+  test-patch:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Maximize Build Space
+        # frameworks/base is large; this helps ensure we don't run out of disk space
+        uses: easimon/maximize-build-space@master
+        with:
+          root-reserve-mb: 2048
+          temp-reserve-mb: 1024
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+
+      - name: Clone Infinity-X frameworks_base
+        run: |
+          git clone --depth=1 -b 16 https://codeberg.org/LFS-dump/frameworks_base frameworks/base
+
+      - name: Fetch and Apply Patch
+        working-directory: frameworks/base
+        run: |
+          # Download the patch file
+          curl -L https://github.com/israfilbd/frameworks_base/commit/0944abd.patch -o fix.patch
+          
+          # Configure dummy git identity for the apply process
+          git config user.email "test@example.com"
+          git config user.name "Patch Tester"
+
+          echo "Checking if the patch can be applied cleanly..."
+          if git apply --check fix.patch; then
+            echo "Patch check passed. Applying..."
+            git am fix.patch
+          else
+            echo "Error: Patch does not apply cleanly to the current frameworks_base head."
+            exit 1
+          fi
+
+      - name: Verify Changes
+        working-directory: frameworks/base
+        run: |
+          echo "Listing modified files:"
+          git log -1 --stat
