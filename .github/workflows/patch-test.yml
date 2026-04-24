@@ -18,9 +18,9 @@ jobs:
           remove-android: 'true'
           remove-haskell: 'true'
 
-      - name: Clone Infinity-X frameworks_base
+      - name: Clone Axion-AOSP frameworks_base
         run: |
-          git clone --depth=1 -b 16 https://codeberg.org/LFS-dump/frameworks_base frameworks/base
+          git clone --depth=1 -b lineage-23.2 https://github.com/AxionAOSP/android_frameworks_base frameworks/base
 
       - name: Fetch and Apply Patch
         working-directory: frameworks/base
