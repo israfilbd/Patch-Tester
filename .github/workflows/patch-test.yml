@@ -26,16 +26,16 @@ jobs:
         working-directory: frameworks/base
         run: |
           # Download the patch file
-          curl -L https://github.com/ij-project/frameworks_base_axion/commit/9001005.patch -o fix.patch
+          curl -L https://github.com/ij-project/frameworks_base_axion/commit/717e3ed.patch -o fix.patch
           
           # Configure dummy git identity for the apply process
           git config user.email "test@example.com"
           git config user.name "Patch Tester"
 
-          echo "Checking if the patch can be applied cleanly..."
+          echo "Checking if the patch can be applied cleanly..."        
           if git apply --check fix.patch; then
             echo "Patch check passed. Applying..."
-            git am fix.patch
+            git apply -3 --index fix.patch
           else
             echo "Error: Patch does not apply cleanly to the current frameworks_base head."
             exit 1
