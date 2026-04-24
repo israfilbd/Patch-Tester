@@ -18,15 +18,15 @@ jobs:
           remove-android: 'true'
           remove-haskell: 'true'
 
-      - name: Clone Infinity-X frameworks_base
+      - name: Clone Lunaris-AOSP frameworks_base
         run: |
-          git clone --depth=1 -b 16 https://codeberg.org/LFS-dump/frameworks_base frameworks/base
+          git clone --depth=1 -b 16.2 https://github.com/Lunaris-AOSP/frameworks_base frameworks/base
 
       - name: Fetch and Apply Patch
         working-directory: frameworks/base
         run: |
           # Download the patch file
-          curl -L https://github.com/israfilbd/frameworks_base/commit/0944abd.patch -o fix.patch
+          curl -L https://github.com/ij-project/frameworks_base_axion/commit/ae8ae9b.patch -o fix.patch
           
           # Configure dummy git identity for the apply process
           git config user.email "test@example.com"
