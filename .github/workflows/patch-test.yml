@@ -4,19 +4,23 @@ on:
   workflow_dispatch:
     inputs:
       frameworks_repo:
-        description: 'Target Frameworks Repo (The one to be patched)'
+        description: 'Target Frameworks Repo'
         required: true
         default: 'https://codeberg.org/LFS-dump/frameworks_base'
       target_branch:
-        description: 'Branch to test against'
+        description: 'Target Branch (e.g., fourteen)'
         required: true
         default: '16'
       fetch_repo:
-        description: 'Repo to fetch the commit from'
+        description: 'Source Repo (ij-project)'
         required: true
         default: 'https://github.com/ij-project/frameworks_base'
+      source_branch:
+        description: 'Source Branch where commit exists'
+        required: true
+        default: 'main'
       commit_hash:
-        description: 'Commit SHA to cherry-pick'
+        description: 'Commit SHA'
         required: true
         default: '522af81'
 
@@ -48,15 +52,15 @@ jobs:
           echo ">>> Adding source remote..."
           git remote add source_repo ${{ github.event.inputs.fetch_repo }}
           
-          echo ">>> Fetching commit (Full Depth)..."
-          # Removed --depth here as requested
-          git fetch source_repo ${{ github.event.inputs.commit_hash }}
+          echo ">>> Fetching source branch: ${{ github.event.inputs.source_branch }}"
+          # Fetching the specific branch ensures the commit history is pulled
+          git fetch source_repo ${{ github.event.inputs.source_branch }}
           
           echo ">>> Attempting cherry-pick..."
           if git cherry-pick ${{ github.event.inputs.commit_hash }}; then
             echo "Success: Cherry-pick applied cleanly!"
           else
-            echo "::error:: Conflict detected!"
+            echo "::error:: Conflict detected or commit not found!"
             git diff
             git cherry-pick --abort
             exit 1
