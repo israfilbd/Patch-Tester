@@ -22,7 +22,7 @@ on:
       commit_hash:
         description: 'Commit SHA'
         required: true
-        default: '522af81'
+        default: 'e98cb38'
 
 jobs:
   test-cherry-pick:
